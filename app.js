@@ -67,11 +67,38 @@ let schedule=[
 
 function renderSchedule(){
 
+    const container = document.getElementById("schedule-list");
 
-    document.getElementById(
-        "schedule-list"
-    ).innerHTML =
-        schedule.join("<br>");
+    container.innerHTML = "";
+
+    schedule.forEach((time,index)=>{
+
+        const row = document.createElement("div");
+
+        row.className = "schedule-item";
+
+
+        row.innerHTML = `
+            <span>${time}</span>
+            <button onclick="removeSchedule(${index})">
+                ❌
+            </button>
+        `;
+
+
+        container.appendChild(row);
+
+    });
+
+}
+
+
+
+function removeSchedule(index){
+
+    schedule.splice(index,1);
+
+    renderSchedule();
 
 }
 
