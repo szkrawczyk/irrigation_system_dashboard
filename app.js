@@ -1,21 +1,70 @@
-const API_URL = "";
+const API_URL = 
+"https://irrigation-api.szymon882.workers.dev";
 
 
 let currentMode = "manual";
 
 
-function pump(state){
+async function pump(state){
 
 
-    console.log(
-        "Pompa:",
-        state
-    );
+    try {
 
 
-    alert(
-        "Komenda pompy: " + state
-    );
+        const response = await fetch(
+            API_URL + "/api/pump",
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    state:state
+
+                })
+
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        console.log(data);
+
+
+        document.getElementById(
+            "pump-status"
+        ).innerText = state;
+
+
+
+        alert(data.message);
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            "Błąd:",
+            error
+        );
+
+
+        alert(
+            "Nie udało się połączyć z Workerem"
+        );
+
+
+    }
+
 
 }
 
