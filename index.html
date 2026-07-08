@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>System podlewania</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <header>
+        <h1>
+            💧 System podlewania
+        </h1>
+
+        <p>
+            Sterowanie pompą i harmonogramem
+        </p>
+    </header>
+
+
+
+    <section class="card">
+
+        <h2>Status systemu</h2>
+
+        <div class="status-row">
+
+            <span id="esp-status" class="dot offline"></span>
+
+            <span id="esp-text">
+                ESP32 offline
+            </span>
+
+        </div>
+
+
+        <div class="info">
+
+            <p>
+                Pompa:
+                <b id="pump-status">
+                    OFF
+                </b>
+            </p>
+
+
+            <p>
+                Tryb:
+                <b id="mode-status">
+                    MANUAL
+                </b>
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+
+
+    <section class="card">
+
+        <h2>
+            Sterowanie ręczne
+        </h2>
+
+
+        <div class="buttons">
+
+            <button class="btn on"
+                onclick="pump('ON')">
+
+                ▶
+                Włącz
+
+            </button>
+
+
+
+            <button class="btn off"
+                onclick="pump('OFF')">
+
+                ■
+                Wyłącz
+
+            </button>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+    <section class="card">
+
+
+        <h2>
+            Tryb pracy
+        </h2>
+
+
+        <button 
+            class="mode-btn"
+            onclick="toggleMode()">
+
+            Zmień tryb
+
+        </button>
+
+
+        <p id="mode-info">
+            Tryb ręczny
+        </p>
+
+
+    </section>
+
+
+
+
+
+    <section class="card">
+
+
+        <h2>
+            Harmonogram
+        </h2>
+
+
+        <div id="schedule-list">
+
+            Brak ustawień
+
+        </div>
+
+
+        <button 
+            class="small-btn"
+            onclick="addSchedule()">
+
+            + Dodaj godzinę
+
+        </button>
+
+
+    </section>
+
+
+
+
+
+    <section class="card">
+
+
+        <h2>
+            Czas podlewania
+        </h2>
+
+
+        <p>
+
+            Aktualnie:
+
+            <b id="duration">
+                15 s
+            </b>
+
+        </p>
+
+
+        <button
+            class="small-btn"
+            onclick="changeDuration()">
+
+            Zmień
+
+        </button>
+
+
+    </section>
+
+
+
+</div>
+
+
+
+<script src="app.js"></script>
+
+
+</body>
+
+</html>
