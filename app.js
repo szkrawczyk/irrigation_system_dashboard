@@ -8,6 +8,9 @@ async function pump(state) {
 
         const response = await fetch(API_URL + "/api/pump", {
             method: "POST",
+
+            credentials: "include",
+
             headers: {
                 "Content-Type": "application/json"
             },
