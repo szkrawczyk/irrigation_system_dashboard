@@ -76,67 +76,172 @@ function toggleMode() {
 
 }
 
-let config = {};
+let config = {
+    duration: 15,
+    zones: [
+        {
+            id:1,
+            enabled:true,
+            times:[]
+        }
+    ]
+};
 
-function renderSchedule() {
 
-    const container = document.getElementById("schedule-list");
 
-    container.innerHTML = "";
+async function loadConfig(){
 
-    schedule.forEach((time, index) => {
+    const response = await fetch("/api/config");
 
-        const row = document.createElement("div");
+    config = await response.json();
 
-        row.className = "schedule-item";
+    console.log("CONFIG:", config);
 
-        row.innerHTML = `
-            <span>${time}</span>
-            <button onclick="removeSchedule(${index})">❌</button>
-        `;
-
-        container.appendChild(row);
-
-    });
-
-}
-
-function removeSchedule(index) {
-
-    schedule.splice(index, 1);
+    document.getElementById("duration").innerText =
+        config.duration + " s";
 
     renderSchedule();
 
 }
 
-renderSchedule();
 
-function addSchedule() {
+async function saveConfig(){
 
-    const time = prompt("Podaj godzinę (HH:MM)");
+    await fetch("/api/config",{
 
-    if (time) {
+        method:"POST",
 
-        schedule.push(time);
+        headers:{
+            "Content-Type":"application/json"
+        },
 
-        renderSchedule();
+        body:JSON.stringify(config)
 
-    }
+    });
+
+    console.log("CONFIG SAVED");
 
 }
 
-function changeDuration() {
 
-    const value = prompt(
-        "Podaj czas w sekundach",
-        "15"
-    );
 
-    if (value) {
+function renderSchedule(){
+
+    const container =
+        document.getElementById("schedule-list");
+
+
+    container.innerHTML="";
+
+
+    const times =
+        config.zones[0].times;
+
+
+    if(times.length===0){
+
+        container.innerHTML="Brak ustawień";
+
+        return;
+
+    }
+
+
+    times.forEach((time,index)=>{
+
+
+        const row=document.createElement("div");
+
+
+        row.className="schedule-item";
+
+
+        row.innerHTML=`
+
+            <span>${time}</span>
+
+            <button onclick="removeSchedule(${index})">
+            ❌
+            </button>
+
+        `;
+
+
+        container.appendChild(row);
+
+
+    });
+
+
+}
+
+
+
+function addSchedule(){
+
+    const time =
+        prompt("Podaj godzinę (HH:MM)");
+
+
+    if(!time)
+        return;
+
+
+    config.zones[0].times.push(time);
+
+
+    renderSchedule();
+
+
+    saveConfig();
+
+
+}
+
+
+
+function removeSchedule(index){
+
+
+    config.zones[0].times.splice(index,1);
+
+
+    renderSchedule();
+
+
+    saveConfig();
+
+
+}
+
+
+
+function changeDuration(){
+
+
+    const value =
+        prompt(
+            "Podaj czas w sekundach",
+            config.duration
+        );
+
+
+    if(value){
+
+
+        config.duration =
+            Number(value);
+
 
         document.getElementById("duration").innerText =
-            value + " s";
+            config.duration + " s";
+
+
+        saveConfig();
 
     }
 
 }
+
+
+loadConfig();
