@@ -1,4 +1,4 @@
-const API_URL = "https://irrigation-api.szymon882.workers.dev";
+const API_URL = "https://irrigation-worker.szymon882.workers.dev";
 
 let currentMode = "manual";
 
