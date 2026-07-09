@@ -2,6 +2,18 @@ const API_URL = "";
 
 let currentMode = "manual";
 
+async function loadConfig(){
+
+    const response = await fetch("/api/config");
+
+    config = await response.json();
+
+    console.log(config);
+
+}
+
+loadConfig();
+
 async function pump(state) {
 
     try {
@@ -64,10 +76,7 @@ function toggleMode() {
 
 }
 
-let schedule = [
-    "08:00",
-    "21:00"
-];
+let config = {};
 
 function renderSchedule() {
 
