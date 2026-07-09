@@ -6,7 +6,7 @@ async function pump(state) {
 
     try {
 
-        const response = await fetch(API_URL + "/api/pump", {
+        const response = await fetch("/api/pump", {
             method: "POST",
 
             credentials: "include",
