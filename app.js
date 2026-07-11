@@ -187,7 +187,14 @@ function addSchedule(){
         return;
 
 
-    config.zones[0].times.push(time);
+    cconst [hours, minutes] = time.split(":");
+
+    const formattedTime =
+        hours.padStart(2, "0") +
+        ":" +
+        minutes.padStart(2, "0");
+
+    config.zones[0].times.push(formattedTime);
 
 
     renderSchedule();
