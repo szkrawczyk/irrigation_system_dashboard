@@ -129,35 +129,50 @@ h2 {
 
 
 
+@media(max-width:400px){
+
+    .buttons{
+
+        flex-direction:column;
+
+    }
+
+}
+
+
+
 .buttons {
 
     display:flex;
-
     gap:20px;
 
 }
 
 
-
 .btn {
 
     flex:1;
-
     padding:15px;
-
     border:none;
-
     border-radius:12px;
-
     color:white;
-
     font-size:1.1rem;
-
     cursor:pointer;
 
 }
 
+.tab-btn {
 
+    flex:1;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    background:#e5e7eb;
+    font-size:1rem;
+    transition:0.2s;
+
+}
 
 .on {
 
@@ -194,7 +209,7 @@ h2 {
 
 
 
-#schedule-list {
+[id^="schedule-"] {
 
     margin-bottom:15px;
 
@@ -231,7 +246,62 @@ h2 {
 
 }
 
+.empty {
 
+    color:#888;
+    font-style:italic;
+
+}
+
+.tabs {
+
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+
+}
+
+
+.tab-btn {
+
+    flex:1;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    background:#e5e7eb;
+    font-size:1rem;
+
+}
+
+
+.tab-btn.active {
+
+    background:#4f46e5;
+    color:white;
+    font-weight:700;
+
+}
+
+
+.zone-page {
+
+    animation: fade .2s;
+
+}
+
+
+@keyframes fade {
+
+    from {
+        opacity:0;
+    }
+
+    to {
+        opacity:1;
+    }
+
+}
 
 @media(max-width:600px){
 

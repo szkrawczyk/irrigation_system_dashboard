@@ -71,44 +71,6 @@
 
 
 
-
-    <section class="card">
-
-        <h2>
-            Sterowanie ręczne
-        </h2>
-
-
-        <div class="buttons">
-
-            <button class="btn on"
-                onclick="pump('ON')">
-
-                ▶
-                Włącz
-
-            </button>
-
-
-
-            <button class="btn off"
-                onclick="pump('OFF')">
-
-                ■
-                Wyłącz
-
-            </button>
-
-
-        </div>
-
-
-    </section>
-
-
-
-
-
     <section class="card">
 
 
@@ -137,6 +99,74 @@
 
 
 
+    <div class="tabs">
+
+
+    <button 
+        class="tab-btn active"
+        onclick="openZone('pomidory', this)">
+
+        🍅 Pomidory
+
+    </button>
+
+
+    <button 
+        class="tab-btn"
+        onclick="openZone('papryka', this)">
+
+        🌶 Papryka
+
+    </button>
+
+
+</div>
+
+
+
+
+
+<div id="zone-pomidory" class="zone-page">
+
+
+    <section class="card">
+
+
+        <h2>
+            Sterowanie ręczne - Pomidory
+        </h2>
+
+
+        <div class="buttons">
+
+
+            <button 
+            class="btn on"
+            onclick="pump('ON','pomidory')">
+
+                ▶ Włącz
+
+            </button>
+
+
+            <button 
+            class="btn off"
+            onclick="pump('OFF','pomidory')">
+
+                ■ Wyłącz
+
+            </button>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
     <section class="card">
 
 
@@ -145,16 +175,16 @@
         </h2>
 
 
-        <div id="schedule-list">
+        <div id="schedule-pomidory">
 
             Brak ustawień
 
         </div>
 
 
-        <button 
-            class="small-btn"
-            onclick="addSchedule()">
+        <button
+        class="small-btn"
+        onclick="addSchedule('pomidory')">
 
             + Dodaj godzinę
 
@@ -179,16 +209,16 @@
 
             Aktualnie:
 
-            <b id="duration">
-                15 s
+            <b id="duration-pomidory">
+                
             </b>
 
         </p>
 
 
         <button
-            class="small-btn"
-            onclick="changeDuration()">
+        class="small-btn"
+        onclick="changeDuration('pomidory')">
 
             Zmień
 
@@ -197,6 +227,116 @@
 
     </section>
 
+
+</div>
+
+
+
+
+
+
+<div id="zone-papryka" 
+     class="zone-page"
+     style="display:none">
+
+
+    <section class="card">
+
+
+        <h2>
+            Sterowanie ręczne - Papryka
+        </h2>
+
+
+        <div class="buttons">
+
+
+            <button 
+            class="btn on"
+            onclick="pump('ON','papryka')">
+
+                ▶ Włącz
+
+            </button>
+
+
+            <button 
+            class="btn off"
+            onclick="pump('OFF','papryka')">
+
+                ■ Wyłącz
+
+            </button>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+    <section class="card">
+
+
+        <h2>
+            Harmonogram
+        </h2>
+
+
+        <div id="schedule-papryka">
+
+            Brak ustawień
+
+        </div>
+
+
+        <button
+        class="small-btn"
+        onclick="addSchedule('papryka')">
+
+            + Dodaj godzinę
+
+        </button>
+
+
+    </section>
+
+
+
+
+
+    <section class="card">
+
+
+        <h2>
+            Czas podlewania
+        </h2>
+
+
+        <p>
+
+            Aktualnie:
+
+            <b id="duration-papryka">
+                
+            </b>
+
+        </p>
+
+
+        <button
+        class="small-btn"
+        onclick="changeDuration('papryka')">
+
+            Zmień
+
+        </button>
+
+
+    </section>
 
 
 </div>

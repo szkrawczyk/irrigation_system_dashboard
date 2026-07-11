@@ -2,218 +2,327 @@ const API_URL = "";
 
 let currentMode = "manual";
 
+let config = {
+    zones: []
+};
+
+
+// =======================
+// WCZYTANIE KONFIGURACJI
+// =======================
+
 async function loadConfig(){
-
-    const response = await fetch("/api/config");
-
-    config = await response.json();
-
-    console.log(config);
-
-}
-
-loadConfig();
-
-async function pump(state) {
 
     try {
 
-        const response = await fetch("/api/pump", {
-            method: "POST",
+        const response = await fetch("/api/config");
 
-            credentials: "include",
+        config = await response.json();
 
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                state: state
-            })
-        });
+        console.log("CONFIG:", config);
 
-        const data = await response.json();
 
-        console.log(data);
+        renderZone("pomidory");
 
-        if (data.success) {
+        renderZone("papryka");
 
-            document.getElementById("pump-status").innerText = state;
 
-            alert(
-                state === "ON"
-                    ? "Pompa została włączona"
-                    : "Pompa została wyłączona"
-            );
+    } catch(error){
 
-        } else {
-
-            alert("Błąd: " + (data.error || "Nieznany błąd"));
-
-        }
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Nie udało się połączyć z Workerem");
+        console.error(
+            "CONFIG ERROR:",
+            error
+        );
 
     }
 
 }
 
-function toggleMode() {
 
-    currentMode =
-        currentMode === "manual"
-            ? "auto"
-            : "manual";
+loadConfig();
 
-    document.getElementById("mode-status").innerText =
-        currentMode.toUpperCase();
 
-    document.getElementById("mode-info").innerText =
-        "Tryb: " + currentMode;
 
-}
 
-let config = {
-    duration: 15,
-    zones: [
-        {
-            id:1,
-            enabled:true,
-            times:[]
+// =======================
+// STEROWANIE POMPĄ
+// =======================
+
+async function pump(state, zone){
+
+
+    try {
+
+
+        const selectedZone =
+            config.zones.find(
+                z => z.id === zone
+            );
+
+
+        const response = await fetch(
+            "/api/pump",
+            {
+
+                method:"POST",
+
+                credentials:"include",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+
+                body:JSON.stringify({
+
+                    state:state,
+
+                    zone:zone,
+
+                    duration:
+                        selectedZone ? selectedZone.duration : 0
+
+                })
+
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(data);
+
+
+
+        if(data.success){
+
+
+            alert(
+                zone +
+                ": " +
+                state
+            );
+
+
         }
-    ]
-};
+        else {
+
+            alert(
+                "Błąd: " +
+                data.error
+            );
+
+        }
 
 
 
-async function loadConfig(){
+    }
+    catch(error){
 
-    const response = await fetch("/api/config");
+        console.error(error);
 
-    config = await response.json();
+        alert(
+            "Błąd połączenia"
+        );
 
-    console.log("CONFIG:", config);
+    }
 
-    document.getElementById("duration").innerText =
-        config.duration + " s";
-
-    renderSchedule();
 
 }
 
 
-async function saveConfig(){
 
-    await fetch("/api/config",{
 
-        method:"POST",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+// =======================
+// ZMIANA ZAKŁADKI
+// =======================
 
-        body:JSON.stringify(config)
+
+function openZone(zone, button){
+
+
+    document
+    .querySelectorAll(".zone-page")
+    .forEach(page=>{
+
+
+        page.style.display="none";
+
 
     });
 
-    console.log("CONFIG SAVED");
+
+
+    document
+    .getElementById(
+        "zone-" + zone
+    )
+    .style.display="block";
+
+
+
+    document
+    .querySelectorAll(".tab-btn")
+    .forEach(btn=>{
+
+        btn.classList.remove(
+            "active"
+        );
+
+    });
+
+
+
+    button.classList.add(
+        "active"
+    );
+
 
 }
 
 
 
-function renderSchedule(){
+
+
+// =======================
+// RENDER HARMONOGRAMU
+// =======================
+
+
+function renderZone(zone){
+
+
+    const selectedZone =
+        config.zones.find(
+            z=>z.id===zone
+        );
+
+
+    if(!selectedZone)
+        return;
+
+
 
     const container =
-        document.getElementById("schedule-list");
+        document.getElementById(
+            "schedule-" + zone
+        );
+
 
 
     container.innerHTML="";
 
 
-    const times =
-        config.zones[0].times;
+    if(selectedZone.times.length === 0){
 
-
-    if(times.length===0){
-
-        container.innerHTML="Brak ustawień";
-
-        return;
+    container.innerHTML =
+        "<span class='empty'>Brak ustawień</span>";
 
     }
 
 
-    times.forEach((time,index)=>{
+
+    selectedZone.times.forEach(
+        (time,index)=>{
 
 
-        const row=document.createElement("div");
+            const row =
+                document.createElement(
+                    "div"
+                );
 
 
-        row.className="schedule-item";
+            row.className =
+                "schedule-item";
 
 
-        row.innerHTML=`
 
-            <span>${time}</span>
+            row.innerHTML = `
 
-            <button onclick="removeSchedule(${index})">
-            ❌
-            </button>
-
-        `;
+                <span>
+                    ${time}
+                </span>
 
 
-        container.appendChild(row);
+                <button
+                onclick="removeSchedule('${zone}',${index})">
+
+                    ❌
+
+                </button>
+
+            `;
 
 
-    });
+            container.appendChild(row);
+
+
+        }
+    );
+
+
+
+    document
+    .getElementById(
+        "duration-" + zone
+    )
+    .innerText =
+        selectedZone.duration +
+        " s";
 
 
 }
 
 
 
-function addSchedule(){
+
+
+
+
+// =======================
+// DODAWANIE GODZINY
+// =======================
+
+
+function addSchedule(zone){
+
 
     const time =
-        prompt("Podaj godzinę (HH:MM)");
+        prompt(
+            "Podaj godzinę HH:MM"
+        );
+
 
 
     if(!time)
         return;
 
+    const [hours, minutes] = time.split(":");
 
-    cconst [hours, minutes] = time.split(":");
 
     const formattedTime =
-        hours.padStart(2, "0") +
+        hours.padStart(2,"0") +
         ":" +
-        minutes.padStart(2, "0");
-
-    config.zones[0].times.push(formattedTime);
+        minutes.padStart(2,"0");
 
 
-    renderSchedule();
-
-
-    saveConfig();
-
-
-}
+    const selectedZone =
+        config.zones.find(
+            z=>z.id===zone
+        );
 
 
 
-function removeSchedule(index){
+    selectedZone.times.push(
+        formattedTime
+    );
 
 
-    config.zones[0].times.splice(index,1);
 
-
-    renderSchedule();
+    renderZone(zone);
 
 
     saveConfig();
@@ -223,32 +332,160 @@ function removeSchedule(index){
 
 
 
-function changeDuration(){
+
+
+
+
+// =======================
+// USUWANIE GODZINY
+// =======================
+
+
+function removeSchedule(zone,index){
+
+
+    const selectedZone =
+        config.zones.find(
+            z=>z.id===zone
+        );
+
+
+
+    selectedZone.times.splice(
+        index,
+        1
+    );
+
+
+    renderZone(zone);
+
+
+    saveConfig();
+
+
+}
+
+
+
+
+
+
+
+// =======================
+// CZAS PODLEWANIA
+// =======================
+
+
+function changeDuration(zone){
+
+
+    const selectedZone =
+        config.zones.find(
+            z=>z.id===zone
+        );
 
 
     const value =
         prompt(
-            "Podaj czas w sekundach",
-            config.duration
+            "Podaj czas podlewania (s)",
+            selectedZone.duration
         );
 
 
-    if(value){
+
+    if(!value)
+        return;
 
 
-        config.duration =
-            Number(value);
+
+    selectedZone.duration =
+        Number(value);
 
 
-        document.getElementById("duration").innerText =
-            config.duration + " s";
+
+    renderZone(zone);
 
 
-        saveConfig();
+    saveConfig();
 
-    }
 
 }
 
 
-loadConfig();
+
+
+
+
+// =======================
+// ZAPIS KV
+// =======================
+
+
+async function saveConfig(){
+
+
+    await fetch(
+        "/api/config",
+        {
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
+
+
+            body:
+            JSON.stringify(config)
+
+        }
+    );
+
+
+    console.log(
+        "CONFIG SAVED"
+    );
+
+
+}
+
+
+
+
+
+
+
+// =======================
+// TRYB PRACY
+// =======================
+
+
+function toggleMode(){
+
+
+    currentMode =
+        currentMode==="manual"
+        ? "auto"
+        : "manual";
+
+
+
+    document
+    .getElementById(
+        "mode-status"
+    )
+    .innerText =
+        currentMode.toUpperCase();
+
+
+
+    document
+    .getElementById(
+        "mode-info"
+    )
+    .innerText =
+        "Tryb: " + currentMode;
+
+
+}
